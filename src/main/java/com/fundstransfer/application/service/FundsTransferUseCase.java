@@ -3,13 +3,14 @@ package com.fundstransfer.application.service;
 import com.fundstransfer.application.port.AccountRepository;
 import com.fundstransfer.application.port.ExchangeRateService;
 import com.fundstransfer.application.port.TransferRepository;
-import com.fundstransfer.domain.model.*;
+import com.fundstransfer.domain.model.Account;
+import com.fundstransfer.domain.model.Transfer;
+import com.fundstransfer.domain.model.TransferStatus;
 import com.fundstransfer.domain.model.exception.AccountNotFoundException;
 import com.fundstransfer.domain.model.exception.InsufficientFundsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -24,7 +25,7 @@ public class FundsTransferUseCase {
     private final TransferRepository transferRepository;
     private final ExchangeRateService exchangeRateService;
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional
     public TransferResult handle(TransferRequest request) {
         var fromAccount = findAccount(request.fromAccountId(), "Source account not found");
         var toAccount = findAccount(request.toAccountId(), "Target account not found");
